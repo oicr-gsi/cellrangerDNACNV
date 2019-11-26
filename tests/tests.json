@@ -1,0 +1,27 @@
+{
+  "defaults": {
+    "description": "Cellranger-dna cnv workflow test",
+    "metrics_calculate": "calculate.sh",
+    "metrics_compare": "compare.sh",
+    "output_metrics_dir": "/.mounts/labs/gsi/testdata/cellranger_dna_cnv/output_metrics/${project.version}",
+    "parameters": {
+      "wdl_options": {
+        "write_to_cache": false,
+        "read_from_cache": false
+      }
+    }
+  },
+  "tests": [
+    {
+      "id": "cellranger_dna_cnv_test_01",
+      "parameters": {
+        "wdl_inputs": {
+          "cellranger_dna_cnv.runID": "cnv_bj_mkn45_10pct",
+          "cellranger_dna_cnv.samplePrefix": "bj_mkn45_10pct",
+          "cellranger_dna_cnv.fastqDirectory": "/.mounts/labs/gsiprojects/gsi/10XSingleCellCNV/bj_mkn45_10pct",
+          "cellranger_dna_cnv.referenceDirectory": "/scratch2/users/amosquera/refdata-GRCh38-1.0.0"
+        }
+      }
+    }
+  ]
+}
