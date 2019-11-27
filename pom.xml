@@ -10,12 +10,12 @@
         <relativePath/>
     </parent>
 
-    <artifactId>cellranger_dna_cnv</artifactId>
+    <artifactId>cellrangerDNACNV</artifactId>
     <version>1.0</version>
 
     <properties>
         <workflow-description>Workflow to process fastq files through cellranger DNA cnv.</workflow-description>
-        <wdl-workflow>cellranger_dna_cnv.wdl</wdl-workflow>
+        <wdl-workflow>cellrangerDNACNV.wdl</wdl-workflow>
         <test-definition>tests.json</test-definition>
     </properties>
 

@@ -1,4 +1,4 @@
-# cellranger_dna_cnv
+# cellrangerDNACNV
 
 Workflow to process Chromium single cell DNA sequencing output to align reads, identify copy number variation (CNV), and compare heterogeneity among cells.
 
@@ -8,7 +8,7 @@ Workflow to process Chromium single cell DNA sequencing output to align reads, i
 
 ### Cromwell
 ```
-java -jar cromwell.jar run cellranger_dna_cnv.wdl --inputs inputs.json
+java -jar cromwell.jar run cellrangerDNACNV.wdl --inputs inputs.json
 ```
 
 ### Inputs

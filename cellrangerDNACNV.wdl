@@ -1,6 +1,6 @@
 version 1.0
 
-workflow cellranger_dna_cnv {
+workflow cellrangerDNACNV {
   input {
     String runID
     String samplePrefix
