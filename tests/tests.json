@@ -19,7 +19,7 @@
           "cellrangerDNACNV.runID": "cnv_bj_mkn45_10pct",
           "cellrangerDNACNV.samplePrefix": "bj_mkn45_10pct",
           "cellrangerDNACNV.fastqDirectory": "/.mounts/labs/gsiprojects/gsi/10XSingleCellCNV/bj_mkn45_10pct",
-          "cellrangerDNACNV.referenceDirectory": "/scratch2/users/amosquera/refdata-GRCh38-1.0.0"
+          "cellrangerDNACNV.referenceDirectory": "/.mounts/labs/gsi/modulator/sw/data/refdata-grch38-1.0.0"
         }
       }
     }
