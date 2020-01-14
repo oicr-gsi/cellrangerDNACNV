@@ -18,14 +18,14 @@ Parameter|Value|Description
 ---|---|---
 `runID`|String|A unique run ID string.
 `samplePrefix`|String|Sample name (FASTQ file prefix). Can take multiple comma-separated values.
-`fastqDirectory`|String|Path to folder containing fastq files.
+`fastqs`|Array[File]|Array of input fastqs.
 `referenceDirectory`|String|Path to the Cell Ranger DNA compatible genome reference.
 
 
 #### Optional workflow parameters:
 Parameter|Value|Default|Description
 ---|---|---|---
-`localMem`|String?|None|Restricts cellranger-dna to use specified amount of memory (in GB) to execute pipeline stages. By default, cellranger-dna will use 90% of the memory available on your system.
+`localMem`|Int?|None|Restricts cellranger-dna to use specified amount of memory (in GB) to execute pipeline stages. By default, cellranger-dna will use 90% of the memory available on your system.
 
 
 #### Optional task parameters:
@@ -33,7 +33,7 @@ Parameter|Value|Default|Description
 ---|---|---|---
 `cnv.modules`|String?|"cellranger-dna"|Environment module name to load before command execution.
 `cnv.cellranger_dna`|String?|"cellranger-dna"|
-
+`cnv.timeout`|Int|48|
 
 ### Outputs
 
