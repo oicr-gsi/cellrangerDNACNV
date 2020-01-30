@@ -4,15 +4,22 @@ workflow cellrangerDNACNV {
   input {
     String runID
     String samplePrefix
-    String fastqDirectory
+    Array[File] fastqs
     String referenceDirectory
-    String? localMem
+    Int? localMem
   }
+
+  call symlinkFastqs {
+      input:
+        samplePrefix = samplePrefix,
+        fastqs = fastqs
+    }
+
   call cnv {
     input:
       runID = runID,
       samplePrefix = samplePrefix,
-      fastqDirectory = fastqDirectory,
+      fastqDirectory = symlinkFastqs.fastqDirectory,
       referenceDirectory = referenceDirectory,
       localMem = localMem
   }
@@ -33,7 +40,7 @@ workflow cellrangerDNACNV {
   parameter_meta {
     runID: "A unique run ID string."
     samplePrefix: "Sample name (FASTQ file prefix). Can take multiple comma-separated values."
-    fastqDirectory: "Path to folder containing fastq files."
+    fastqDirectory: "Path to folder containing symlinked fastq files."
     referenceDirectory: "Path to the Cell Ranger DNA compatible genome reference."
     localMem: "Restricts cellranger-dna to use specified amount of memory (in GB) to execute pipeline stages. By default, cellranger-dna will use 90% of the memory available on your system."
   }
@@ -46,48 +53,84 @@ workflow cellrangerDNACNV {
   }
 }
 
+task symlinkFastqs {
+  input {
+    Array[File] fastqs
+    String? samplePrefix
+    Int mem = 1
+  }
+
+  command <<<
+    mkdir ~{samplePrefix}
+    while read line ; do
+      ln -s $line ~{samplePrefix}/$(basename $line)
+    done < ~{write_lines(fastqs)}
+    echo $PWD/~{samplePrefix}
+  >>>
+
+  runtime {
+    memory: "~{mem} GB"
+  }
+
+  output {
+     String fastqDirectory = read_string(stdout())
+  }
+
+  parameter_meta {
+    fastqs: "Array of input fastqs."
+  }
+
+  meta {
+    output_meta: {
+      fastqDirectory: "Path to folder containing symlinked fastq files."
+    }
+  }
+}
+
 task cnv {
   input {
     String? modules = "cellranger-dna"
-	String? cellranger_dna = "cellranger-dna"
+    String? cellranger_dna = "cellranger-dna"
     String runID
     String samplePrefix
     String fastqDirectory
     String referenceDirectory
-    String? localMem = "2"
+    Int? localMem = 64
+    Int timeout = 48
   }
 
   command <<<
    ~{cellranger_dna} cnv \
     --id "~{runID}" \
-    --fastq "~{fastqDirectory}" \
+    --fastqs "~{fastqDirectory}" \
     --sample "~{samplePrefix}" \
     --reference "~{referenceDirectory}" \
     --localmem "~{localMem}"
   >>>
 
   runtime {
-    memory: "~{localMem}"
+    memory: "~{localMem} GB"
     modules: "~{modules}"
+    timeout: "~{timeout}"
   }
 
   output {
-    File possortedBam = "outs/possorted_bam.bam"
-    File possortedBamIndex = "outs/possorted_bam.bam.bai"
-    File nodeCNVCalls = "outs/node_cnv_calls.bed"
-    File nodeUnmergedCNVCalls = "outs/node_unmerged_cnv_calls.bed"
-    File mappableRegions = "outs/mappable_regions.bed"
-    File perCellSummaryMetrics = "outs/per_cell_summary_metrics.csv"
-    File summary = "outs/summary.csv"
-    File cnvData = "outs/cnv_data.h5"
-    File dloupe = "outs/dloupe.dloupe"
-    File alarmsSummary = "outs/alarms_summary.txt"
+    File possortedBam = "~{runID}/outs/possorted_bam.bam"
+    File possortedBamIndex = "~{runID}/outs/possorted_bam.bam.bai"
+    File nodeCNVCalls = "~{runID}/outs/node_cnv_calls.bed"
+    File nodeUnmergedCNVCalls = "~{runID}/outs/node_unmerged_cnv_calls.bed"
+    File mappableRegions = "~{runID}/outs/mappable_regions.bed"
+    File perCellSummaryMetrics = "~{runID}/outs/per_cell_summary_metrics.csv"
+    File summary = "~{runID}/outs/summary.csv"
+    File cnvData = "~{runID}/outs/cnv_data.h5"
+    File dloupe = "~{runID}/outs/dloupe.dloupe"
+    File alarmsSummary = "~{runID}/outs/alarms_summary.txt"
   }
 
    parameter_meta {
       runID: "A unique run ID string."
       samplePrefix: "Sample name (FASTQ file prefix). Can take multiple comma-separated values."
-      fastqDirectory: "Path to folder containing fastq files."
+      fastqDirectory: "Path to folder containing symlinked fastq files."
       referenceDirectory: "Path to the Cell Ranger DNA compatible genome reference."
       localMem: "Restricts cellranger-dna to use specified amount of memory (in GB) to execute pipeline stages. By default, cellranger-dna will use 90% of the memory available on your system."
       modules: "Environment module name to load before command execution."
@@ -107,5 +150,4 @@ task cnv {
       alarmsSummary: "Run alerts."
     }
   }
-
 }
