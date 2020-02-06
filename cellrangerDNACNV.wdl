@@ -7,6 +7,7 @@ workflow cellrangerDNACNV {
     Array[File] fastqs
     String referenceDirectory
     Int? localMem
+    Int? timeout
   }
 
   call symlinkFastqs {
@@ -21,7 +22,8 @@ workflow cellrangerDNACNV {
       samplePrefix = samplePrefix,
       fastqDirectory = symlinkFastqs.fastqDirectory,
       referenceDirectory = referenceDirectory,
-      localMem = localMem
+      localMem = localMem,
+      timeout = timeout
   }
 
   output {
@@ -43,6 +45,7 @@ workflow cellrangerDNACNV {
     fastqDirectory: "Path to folder containing symlinked fastq files."
     referenceDirectory: "Path to the Cell Ranger DNA compatible genome reference."
     localMem: "Restricts cellranger-dna to use specified amount of memory (in GB) to execute pipeline stages. By default, cellranger-dna will use 90% of the memory available on your system."
+    timeout: "Restricts cellranger-dna to run in the specified time budget."
   }
 
   meta {
@@ -96,7 +99,7 @@ task cnv {
     String fastqDirectory
     String referenceDirectory
     Int? localMem = 64
-    Int timeout = 48
+    Int? timeout = 48
   }
 
   command <<<
@@ -133,6 +136,7 @@ task cnv {
       fastqDirectory: "Path to folder containing symlinked fastq files."
       referenceDirectory: "Path to the Cell Ranger DNA compatible genome reference."
       localMem: "Restricts cellranger-dna to use specified amount of memory (in GB) to execute pipeline stages. By default, cellranger-dna will use 90% of the memory available on your system."
+      timeout: "Restricts cellranger-dna to run in the specified time budget."
       modules: "Environment module name to load before command execution."
     }
 

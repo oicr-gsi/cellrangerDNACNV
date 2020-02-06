@@ -25,15 +25,14 @@ Parameter|Value|Description
 #### Optional workflow parameters:
 Parameter|Value|Default|Description
 ---|---|---|---
-`localMem`|Int?|None|Restricts cellranger-dna to use specified amount of memory (in GB) to execute pipeline stages. By default, cellranger-dna will use 90% of the memory available on your system.
-
+`localMem`|Int?|64|Restricts cellranger-dna to use specified amount of memory (in GB) to execute pipeline stages. By default, cellranger-dna will use 90% of the memory available on your system.
+`timeout`|Int?|168h|Restricts cellranger-dna to run in the specified time budget.
 
 #### Optional task parameters:
 Parameter|Value|Default|Description
 ---|---|---|---
 `cnv.modules`|String?|"cellranger-dna"|Environment module name to load before command execution.
 `cnv.cellranger_dna`|String?|"cellranger-dna"|
-`cnv.timeout`|Int|48|
 
 ### Outputs
 
